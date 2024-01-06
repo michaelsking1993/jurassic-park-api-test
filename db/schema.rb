@@ -17,15 +17,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_06_183151) do
   create_table "cages", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "max_capacity"
-    t.integer "power_status"
+    t.integer "max_capacity", null: false
+    t.integer "power_status", null: false
   end
 
   create_table "dinosaurs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "name"
-    t.integer "gender"
+    t.string "name", null: false
     t.bigint "species_id", null: false
     t.bigint "cage_id", null: false
     t.index ["cage_id"], name: "index_dinosaurs_on_cage_id"
@@ -35,8 +34,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_06_183151) do
   create_table "species", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "title"
-    t.integer "dietary_type"
+    t.string "title", null: false
+    t.integer "dietary_type", null: false
   end
 
   add_foreign_key "dinosaurs", "cages"
