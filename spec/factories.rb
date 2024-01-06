@@ -12,6 +12,6 @@ FactoryBot.define do
 
   factory :species do
     title { Faker::Creature::Animal.name } # this is as close as we can get to faking dinosaur names, unless we find another library or make our own
-    dietary_type { Species.dietary_types.keys.ample }
+    dietary_type { Species.dietary_types.keys.sample }
   end
 end

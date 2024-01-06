@@ -14,7 +14,11 @@ RSpec.describe Species do
   describe 'validations' do
     context 'when adding a species' do
       it 'must have a dietary_type (herbivore, carnivore)' do
+        some_species = build(:species)
+        expect(some_species).to be_valid
 
+        some_species.dietary_type = nil
+        expect(some_species).not_to be_valid
       end
     end
   end
