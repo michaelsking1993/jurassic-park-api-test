@@ -12,6 +12,10 @@ RSpec.describe Species do
 
 
   describe 'validations' do
+    context 'when adding a species' do
+      it 'must have a dietary_type (herbivore, carnivore)' do
 
+      end
+    end
   end
 end

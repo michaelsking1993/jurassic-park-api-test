@@ -21,7 +21,7 @@ class CreateCagesDinosaursAndSpecies < ActiveRecord::Migration[7.1]
       t.timestamps
 
       t.string :name, null: false # the specific name of the dinosaur, ex. "John", "Mary", "Jane".
-      
+
       t.references :species, null: false, foreign_key: true# each dinosaur must have a species that it is a part of.
       t.references :cage, null: false, foreign_key: true # each dinosaur must have a cage where it sleeps/eats/chills.
     end

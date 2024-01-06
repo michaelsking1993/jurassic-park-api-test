@@ -12,6 +12,14 @@ RSpec.describe Dinosaur do
 
 
   describe 'validations' do
+    context 'when adding a dinosaur' do
+      it 'must have a name' do
 
+      end
+
+      it 'must have a species' do
+
+      end
+    end
   end
 end
