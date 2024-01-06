@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :cage do
     max_capacity { rand(1..10) }
-    power_status { Cage.power_statuses.keys.sample }
+    power_status { POWER_STATUSES.values.sample }
   end
 
   factory :dinosaur do
@@ -12,6 +12,6 @@ FactoryBot.define do
 
   factory :species do
     title { Faker::Creature::Animal.name } # this is as close as we can get to faking dinosaur names, unless we find another library or make our own
-    dietary_type { Species.dietary_types.keys.sample }
+    dietary_type { DIETARY_TYPES.values.sample }
   end
 end

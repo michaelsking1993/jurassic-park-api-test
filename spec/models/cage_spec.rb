@@ -22,9 +22,31 @@ RSpec.describe Cage do
       end
     end
 
-    context 'when powering down a cage' do
-      it 'does not allow powering down if there are dinosaurs inside' do
+    context 'when powering down or activating a cage' do
+      context 'when powering down a cage' do
+        context 'when there are dinosaurs inside' do
+          it 'does not allow powering down' do
+            some_cage = create(:cage, power_status: POWER_STATUSES[:active])
+            some_dinosaur = create(:dinosaur)
 
+            some_cage.dinosaurs << some_dinosaur
+            some_cage.update(power_status: POWER_STATUSES[:down])
+
+            expect(some_cage.errors.full_messages).to include("Cannot power down a cage when dinosaurs are inside!")
+            some_cage.reload
+            expect(some_cage.power_status).to eq(POWER_STATUSES[:active]) # i.e. cage should still be active, the change should not have persisted.
+          end
+        end
+
+        context 'when there are NOT dinosaurs inside' do
+          it 'allows powering down' do
+            some_cage = create(:cage, power_status: POWER_STATUSES[:active])
+
+            some_cage.update(power_status: POWER_STATUSES[:down])
+            some_cage.reload
+            expect(some_cage.power_status).to eq(POWER_STATUSES[:down]) # i.e. the change should have persisted.
+          end
+        end
       end
     end
 
