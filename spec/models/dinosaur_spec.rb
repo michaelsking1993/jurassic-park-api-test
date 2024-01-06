@@ -96,25 +96,35 @@ RSpec.describe Dinosaur do
         end
       end
 
-      describe 'moving carnivores into a cage' do
-        context 'when carnivores of a different species are already in the cage' do
+      describe 'moving carnivores into a cage with each other' do
+        context 'when 1 or more carnivores of a different species are already in the cage' do
           it 'does not let them in' do
-            debugger
             carnivore_1, carnivore_2 = create_list(:dinosaur, 2, :carnivore)
-            debugger
-            puts 'hello'
+            cage_1 = carnivore_1.cage
+
+            # now, attempt to put them in the same cage
+            carnivore_2.update(cage: cage_1)
+
+            expect(carnivore_2.errors.full_messages).to include('Cannot move a carnivore into a cage with a carnivore of a different species!')
+            carnivore_2.reload
+            expect(carnivore_2.cage).not_to eq(cage_1) # i.e. the update should not have persisted.
           end
         end
 
-        context 'when carnivores of only the same species are in the cage' do
+        context 'when carnivore(s) of only the same species are in the cage' do
           it 'lets them in' do
+            carnivore_species = create(:species, :carnivore)
+            carnivore_1, carnivore_2 = create_list(:dinosaur, 2, species: carnivore_species)
 
+            cage_1 = carnivore_1.cage
+
+            # now, attempt to put them in the same cage
+            carnivore_2.update(cage: cage_1)
+
+            carnivore_2.reload
+            expect(carnivore_2.cage).to eq(cage_1) # i.e. the change should have persisted.
           end
         end
-      end
-
-      it 'only allows carnivores to be in a cage with other dinosaurs of the same species' do
-
       end
     end
   end

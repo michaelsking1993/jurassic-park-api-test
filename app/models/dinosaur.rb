@@ -4,17 +4,19 @@ class Dinosaur < ApplicationRecord
 
   validates :name, :cage, presence: true
 
-  validate :cage_is_active, if: -> { will_save_change_to_cage_id? && cage_id.present? }
-  validate :cage_has_only_my_diet, if: -> { will_save_change_to_cage_id? && cage_id.present? }
+  validate :cage_is_active, :cage_has_only_my_diet, :cage_has_carnivores_of_same_species, if: -> { will_save_change_to_cage_id? && cage_id.present? }
 
   private
 
+  # cannot add dinosaurs to an inactive cage
   def cage_is_active
     if cage.down?
       errors.add(:base, 'Cannot move a dinosaur into a powered down cage!')
     end
   end
 
+
+  # cannot add dinosaurs to a cage with dinosaurs of a different dietary type
   def cage_has_only_my_diet
     diets_that_arent_mine = DIETARY_TYPES.values - Array(species.dietary_type) # currently there will only be 1 other type, but in future could be more.
     diets_in_cage = cage.dinosaurs.joins(:species).pluck('species.dietary_type')
@@ -26,5 +28,15 @@ class Dinosaur < ApplicationRecord
     end
   end
 
+  # cannot add carnivores to a cage with carnivores of a different species
+  def cage_has_carnivores_of_same_species
+    my_dietary_type = species.dietary_type
+    if my_dietary_type == DIETARY_TYPES[:carnivore]
+      other_species_ids_in_cage = cage.dinosaurs.joins(:species).pluck('species.id').uniq - Array(species.id)
 
+      if other_species_ids_in_cage.present?
+        errors.add(:base, 'Cannot move a carnivore into a cage with a carnivore of a different species!')
+      end
+    end
+  end
 end
