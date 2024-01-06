@@ -1,9 +1,9 @@
 POWER_STATUSES = {
-  down: 'DOWN',
-  active: 'ACTIVE'
+  down: 'down',
+  active: 'active'
 }
 
 DIETARY_TYPES = {
-  herbivore: 'HERBIVORE',
-  carnivore: 'CARNIVORE'
+  herbivore: 'herbivore',
+  carnivore: 'carnivore'
 }

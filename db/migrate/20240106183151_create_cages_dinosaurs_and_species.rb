@@ -5,7 +5,7 @@ class CreateCagesDinosaursAndSpecies < ActiveRecord::Migration[7.1]
       t.timestamps
 
       t.integer :max_capacity, null: false # how many dinosaurs can this cage hold?
-      t.integer :power_status, null: false, default: 'ACTIVE' # will be an enum with 2 initial statuses ("active", and "down"), maybe with other statuses in the future.
+      t.integer :power_status, null: false, default: 1 # will be an enum with 2 initial statuses ('active', and 'down'), default will be 'active'.
     end
 
     # This table tracks the different species of the dinosaurs in the park.

@@ -4,7 +4,7 @@ class Species < ApplicationRecord
   validates :dietary_type, presence: true
 
   enum dietary_type: {
-    HERBIVORE: 0,
-    CARNIVORE: 1
+    herbivore: 0,
+    carnivore: 1
   }
 end

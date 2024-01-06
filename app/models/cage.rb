@@ -7,14 +7,14 @@ class Cage < ApplicationRecord
   validate :cage_is_empty_if_powering_down
 
   enum power_status: {
-    DOWN: 0,
-    ACTIVE: 1
+    down: 0,
+    active: 1
   }
 
   private
 
   def cage_is_empty_if_powering_down
-    is_powering_down = power_status_change.present? && power_status_change[1] == POWER_STATUSES[:down]
+    is_powering_down = will_save_change_to_power_status? && down?
 
     if is_powering_down
       if dinosaurs.any?
