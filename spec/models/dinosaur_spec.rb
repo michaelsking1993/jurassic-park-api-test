@@ -12,7 +12,7 @@ RSpec.describe Dinosaur do
 
 
   describe 'validations' do
-    context 'when adding a dinosaur' do
+    context 'when creating a dinosaur' do
       it 'must have a name' do
         some_dinosaur = create(:dinosaur) # must use create to generated the associated species and cage objects
         expect(some_dinosaur).to be_valid
@@ -38,7 +38,7 @@ RSpec.describe Dinosaur do
       end
     end
 
-    context 'when moving dinosaurs into a cage' do
+    context 'when assigning dinosaurs to a cage' do
       describe 'power_status' do
         context 'if the cage is powered down' do
           it 'does not allow them to be moved into the cage' do
@@ -92,6 +92,42 @@ RSpec.describe Dinosaur do
             another_herbivore.update(cage: herbivore_1_cage)
             another_herbivore.reload
             expect(another_herbivore.cage).to eq(herbivore_1_cage)
+          end
+        end
+      end
+
+      describe 'max_capacity' do
+        context 'when a cage is already at max capacity' do
+          it 'does not allow the dinosaur to be assigned the cage' do
+            cage_1 = create(:cage, max_capacity: 2)
+            dinosaur_1 = create(:dinosaur, cage: cage_1)
+            _dinosaur_2 = create(:dinosaur, species: dinosaur_1.species, cage: cage_1)
+
+            # create a different caged dinosaur, then attempt move them into cage 1
+            dinosaur_3 = create(:dinosaur, species: dinosaur_1.species)
+            cage_1.reload # this reload is necessary for the validation to act correctly.
+            dinosaur_3.update(cage: cage_1)
+
+            expect(dinosaur_3.errors.full_messages).to include('Cannot move a dinosaur into a cage that is already at max capacity!')
+            dinosaur_3.reload
+            expect(dinosaur_3.cage).not_to eq(cage_1) # i.e. the change should NOT have persisted
+          end
+        end
+
+        context 'when a cage has room (and does not violate any other validation)' do
+          it 'allows the dinosaur to be assigned to the cage' do
+            cage_1 = create(:cage, max_capacity: 3)
+            dinosaur_1 = create(:dinosaur, cage: cage_1)
+            _dinosaur_2 = create(:dinosaur, species: dinosaur_1.species, cage: cage_1)
+
+            # create a different caged dinosaur, then move them into cage 1
+            dinosaur_3 = create(:dinosaur, species: dinosaur_1.species)
+            cage_1.reload # this reload is necessary for the validation to act correctly.
+
+            dinosaur_3.update(cage: cage_1)
+
+            dinosaur_3.reload
+            expect(dinosaur_3.cage).to eq(cage_1) # i.e. the change should have persisted
           end
         end
       end
