@@ -10,7 +10,7 @@ class Dinosaur < ApplicationRecord
 
   # cannot add dinosaurs to an inactive cage
   def cage_is_active
-    if cage.down?
+    unless cage.active?
       errors.add(:base, 'Cannot move a dinosaur into a powered down cage!')
     end
   end
@@ -18,12 +18,10 @@ class Dinosaur < ApplicationRecord
 
   # cannot add dinosaurs to a cage with dinosaurs of a different dietary type
   def cage_has_only_my_diet
-    diets_that_arent_mine = DIETARY_TYPES.values - Array(species.dietary_type) # currently there will only be 1 other type, but in future could be more.
     diets_in_cage = cage.dinosaurs.joins(:species).pluck('species.dietary_type')
+    diets_in_cage_other_than_mine = diets_in_cage - [species.dietary_type]
 
-    cage_has_another_diet = (diets_in_cage & diets_that_arent_mine).size.positive?
-
-    if cage_has_another_diet
+    if diets_in_cage_other_than_mine.any?
       errors.add(:base, 'Cannot move a dinosaur into a cage with dinosaurs of a different diet type!')
     end
   end
@@ -32,9 +30,10 @@ class Dinosaur < ApplicationRecord
   def cage_has_carnivores_of_same_species
     my_dietary_type = species.dietary_type
     if my_dietary_type == DIETARY_TYPES[:carnivore]
-      other_species_ids_in_cage = cage.dinosaurs.joins(:species).pluck('species.id').uniq - Array(species.id)
+      species_in_cage = cage.dinosaurs.joins(:species).pluck('species.id')
+      species_in_cage_other_than_mine = species_in_cage - [species.id]
 
-      if other_species_ids_in_cage.present?
+      if species_in_cage_other_than_mine.present?
         errors.add(:base, 'Cannot move a carnivore into a cage with a carnivore of a different species!')
       end
     end
