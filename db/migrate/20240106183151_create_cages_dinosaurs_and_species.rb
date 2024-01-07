@@ -4,7 +4,7 @@ class CreateCagesDinosaursAndSpecies < ActiveRecord::Migration[7.1]
     create_table :cages do |t|
       t.timestamps
 
-      t.integer :max_capacity, null: false # how many dinosaurs can this cage hold?
+      t.integer :max_capacity, null: false, default: 1 # how many dinosaurs can this cage hold?
       t.integer :power_status, null: false, default: 1 # will be an enum with 2 initial statuses ('active', and 'down'), default will be 'active'.
     end
 

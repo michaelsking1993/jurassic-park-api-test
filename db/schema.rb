@@ -17,7 +17,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_06_183151) do
   create_table "cages", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "max_capacity", null: false
+    t.integer "max_capacity", default: 1, null: false
     t.integer "power_status", default: 1, null: false
   end
 
