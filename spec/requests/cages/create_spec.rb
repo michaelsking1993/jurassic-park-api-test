@@ -16,7 +16,7 @@ RSpec.describe 'cages#create' do
     end
 
     context 'when the params passed are invalid' do
-      it 'returns a appropriate error code and message' do
+      it 'returns an appropriate error code and message' do
         invalid_params = { max_capacity: 'invalid because I am not an integer', power_status: POWER_STATUSES[:active] }
 
         expect {

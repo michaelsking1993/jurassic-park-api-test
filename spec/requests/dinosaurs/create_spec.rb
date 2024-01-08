@@ -11,11 +11,12 @@ RSpec.describe 'dinosaurs#create' do
         valid_params = { name: 'Michael King', species_id: species.id, cage_id: cage.id }
 
         expect {
-          post dinosaurs_path, params: { cage: valid_params }
+          post dinosaurs_path, params: { dinosaur: valid_params }
         }.to change(Dinosaur, :count).by(1)
 
         expect(response).to have_http_status(:created)
         parsed_body = JSON.parse(response.body)
+
         expect(parsed_body).to include({
           'name' => 'Michael King',
           'species_id' => species.id,
@@ -29,7 +30,7 @@ RSpec.describe 'dinosaurs#create' do
         invalid_params = { name: '', species_id: species.id, cage_id: cage.id }
 
         expect {
-          post '/dinosaurs', params: { cage: invalid_params }
+          post '/dinosaurs', params: { dinosaur: invalid_params }
         }.not_to change(Dinosaur, :count)
 
         expect(response).to have_http_status(:unprocessable_entity)

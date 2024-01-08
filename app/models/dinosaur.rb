@@ -8,6 +8,8 @@ class Dinosaur < ApplicationRecord
            :cage_has_carnivores_of_only_same_species, :cage_has_room,
            if: -> { will_save_change_to_cage_id? && cage_id.present? }
 
+  scope :with_species_name, -> { joins(:species).select('dinosaurs.*, species.title AS species_name') }
+
   private
 
   # cannot add dinosaurs to an inactive cage
@@ -19,7 +21,8 @@ class Dinosaur < ApplicationRecord
 
   # cannot add dinosaurs to a cage that is already at max capacity
   def cage_has_room
-    unless cage.dinosaurs.size < cage.max_capacity # TODO: check if cage is being queried for twice here. If so, optimize.
+    # TODO: check if cage is being queried for twice here. If so, optimize.
+    unless cage.dinosaurs.size < cage.max_capacity
       errors.add(:base, 'Cannot move a dinosaur into a cage that is already at max capacity!')
     end
   end

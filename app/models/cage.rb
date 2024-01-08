@@ -2,7 +2,7 @@ class Cage < ApplicationRecord
   has_many :dinosaurs
 
   validates :power_status, presence: true
-  validates :max_capacity, numericality: { only_integer: true }
+  validates :max_capacity, numericality: { only_integer: true, message: 'must be an integer' }
 
   # make sure the cage is empty before powering down
   validate :cage_is_empty_if_powering_down
@@ -11,6 +11,10 @@ class Cage < ApplicationRecord
     down: 0,
     active: 1
   }
+
+  scope :with_dinosaurs_contained, -> { select('cages.*, COUNT(dinosaurs.id) AS dinosaurs_contained')
+                                          .left_joins(:dinosaurs)
+                                          .group('cages.id') }
 
   private
 

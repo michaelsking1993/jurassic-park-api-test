@@ -8,11 +8,11 @@ RSpec.describe 'dinosaurs#index' do
       let(:carnivore_species_1) { create(:species, dietary_type: DIETARY_TYPES[:carnivore])}
       let(:carnivore_species_2) { create(:species, dietary_type: DIETARY_TYPES[:carnivore])}
 
-      let(:herbivore_dino_1) { create(:dinosaur, species: herbivore_species_1) }
-      let(:herbivore_dino_2) { create(:dinosaur, species: herbivore_species_2) }
-      let(:carnivore_dino_1) { create(:dinosaur, species: carnivore_species_1) }
-      let(:carnivore_dino_2) { create(:dinosaur, species: carnivore_species_2) }
-      let(:carnivore_dino_3) { create(:dinosaur, species: carnivore_species_2) } # so that there are are 2 dinosaurs of this same carnivore species
+      let!(:herbivore_dino_1) { create(:dinosaur, species: herbivore_species_1) }
+      let!(:herbivore_dino_2) { create(:dinosaur, species: herbivore_species_2) }
+      let!(:carnivore_dino_1) { create(:dinosaur, species: carnivore_species_1) }
+      let!(:carnivore_dino_2) { create(:dinosaur, species: carnivore_species_2) }
+      let!(:carnivore_dino_3) { create(:dinosaur, species: carnivore_species_2) } # so that there are are 2 dinosaurs of this same carnivore species
 
       context 'when not requesting a filter by species' do
         it 'returns a list of all dinosaurs' do
@@ -21,15 +21,10 @@ RSpec.describe 'dinosaurs#index' do
           expect(response).to have_http_status(:success)
           parsed_response = JSON.parse(response.body)
 
-          all_dinosaurs = Dinosaur.all
+          all_dinosaurs = Dinosaur.all.joins(:species)
 
           expect(parsed_response.size).to eq(5)
-
-          expect(parsed_response.pluck('id', 'name', 'species_id')).to match_array(all_dinosaurs.pluck(:id, :name, :species_id))
-
-          # expect(parsed_response.pluck('id')).to match_array(all_dinosaurs.pluck(:id))
-          # expect(parsed_response.pluck('name')).to match_array(all_dinosaurs.pluck(:name))
-          # expect(parsed_response.pluck('species_id')).to match_array(all_dinosaurs.pluck(:species_id))
+          expect(parsed_response.pluck('id', 'name', 'species_id', 'species_name')).to match_array(all_dinosaurs.pluck(:id, :name, :species_id, 'species.title'))
         end
       end
 
@@ -42,13 +37,9 @@ RSpec.describe 'dinosaurs#index' do
             parsed_response = JSON.parse(response.body)
 
             expect(parsed_response.size).to eq(2)
-            carnivore_species_2_dinos = [carnivore_dino_2, carnivore_dino_3]
+            carnivore_species_2_dinos = Dinosaur.where(id: [carnivore_dino_2.id, carnivore_dino_3.id]).joins(:species)
 
-            expect(parsed_response.pluck('id', 'name', 'species_id')).to match_array(carnivore_species_2_dinos.pluck(:id, :name, :species_id))
-
-            # expect(parsed_response.pluck('id')).to match_array(active_dinosaurs.pluck(:id))
-            # expect(parsed_response.pluck('max_capacity')).to match_array(active_dinosaurs.pluck(:max_capacity))
-            # expect(parsed_response.pluck('dinosaurs_contained')).to match_array([1, 0, 0, 0, 0, 0])
+            expect(parsed_response.pluck('id', 'name', 'species_id', 'species_name')).to match_array(carnivore_species_2_dinos.pluck(:id, :name, :species_id, 'species.title'))
           end
         end
 

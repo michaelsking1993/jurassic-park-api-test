@@ -10,6 +10,6 @@ Rails.application.routes.draw do
   resources :dinosaurs, except: %i[edit destroy]
   resources :cages, except: %i[edit destroy] do
     # resources :dinosaurs, only: [:index]
-    get '/:cage_id/dinosaurs', to: 'cages#dinosaurs', as: :dinosaurs # a list of dinosaurs inside of a given cage.
+    get 'dinosaurs', to: 'cages#dinosaurs', as: :dinosaurs # a list of dinosaurs inside of a given cage.
   end
 end

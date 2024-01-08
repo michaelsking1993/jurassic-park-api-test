@@ -20,7 +20,7 @@ RSpec.describe 'dinosaurs#update' do
         dinosaur.reload
         expect(dinosaur.name).to eq(updated_name)
         expect(dinosaur.cage_id).to eq(updated_cage.id)
-        expect(dinosaur.species_id).to eq(updated_cage.species_id)
+        expect(dinosaur.species_id).to eq(updated_species.id)
       end
     end
 
