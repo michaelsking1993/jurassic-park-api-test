@@ -12,19 +12,15 @@ class Cage < ApplicationRecord
     active: 1
   }
 
-  scope :with_dinosaurs_contained, -> { select('cages.*, COUNT(dinosaurs.id) AS dinosaurs_contained')
-                                          .left_joins(:dinosaurs)
-                                          .group('cages.id') }
+  scope :with_dinosaurs_contained, -> { select('cages.*, COUNT(dinosaurs.id) AS dinosaurs_contained').left_joins(:dinosaurs).group('cages.id') }
 
   private
 
   def cage_is_empty_if_powering_down
     is_powering_down = will_save_change_to_power_status? && down?
 
-    if is_powering_down
-      if dinosaurs.any?
-        errors.add(:base, 'Cannot power down a cage when dinosaurs are inside!')
-      end
+    if is_powering_down && dinosaurs.any?
+      errors.add(:base, 'Cannot power down a cage when dinosaurs are inside!')
     end
   end
 end

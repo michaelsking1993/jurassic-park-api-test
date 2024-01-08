@@ -5,7 +5,7 @@ RSpec.describe 'cages#index' do
     context 'when there are cages' do
       let!(:active_cages) { create_list(:cage, 6, :active) }
       let!(:down_cages) { create_list(:cage, 3, :down) }
-      let!(:dinosaur) { create(:dinosaur, cage: active_cages[0])} # just to show that the dinosaurs_contained counts are correct
+      let!(:dinosaur) { create(:dinosaur, cage: active_cages[0]) } # just to show that the dinosaurs_contained counts are correct
 
       context 'when not requesting a filter by power_status' do
         it 'returns a list of all cages' do

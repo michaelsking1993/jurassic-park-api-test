@@ -5,8 +5,7 @@ class CagesController < ApplicationController
     if (power_status = params[:power_status]&.downcase).present?
       # power status filter
       if power_status.in?(POWER_STATUSES.values)
-        @cages = @cages.where(power_status: params[:power_status])
-        render json: @cages
+        render json: @cages.where(power_status: params[:power_status])
       else
         render json: { error: 'Power status not found' }, status: :not_found
       end

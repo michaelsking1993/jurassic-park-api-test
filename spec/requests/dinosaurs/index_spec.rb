@@ -3,16 +3,16 @@ require 'rails_helper'
 RSpec.describe 'dinosaurs#index' do
   describe 'GET /dinosaurs' do
     context 'when there are dinosaurs' do
-      let(:herbivore_species_1) { create(:species, dietary_type: DIETARY_TYPES[:herbivore])}
-      let(:herbivore_species_2) { create(:species, dietary_type: DIETARY_TYPES[:herbivore])}
-      let(:carnivore_species_1) { create(:species, dietary_type: DIETARY_TYPES[:carnivore])}
-      let(:carnivore_species_2) { create(:species, dietary_type: DIETARY_TYPES[:carnivore])}
+      let(:herbivore_species1) { create(:species, dietary_type: DIETARY_TYPES[:herbivore]) }
+      let(:herbivore_species2) { create(:species, dietary_type: DIETARY_TYPES[:herbivore]) }
+      let(:carnivore_species1) { create(:species, dietary_type: DIETARY_TYPES[:carnivore]) }
+      let(:carnivore_species2) { create(:species, dietary_type: DIETARY_TYPES[:carnivore]) }
 
-      let!(:herbivore_dino_1) { create(:dinosaur, species: herbivore_species_1) }
-      let!(:herbivore_dino_2) { create(:dinosaur, species: herbivore_species_2) }
-      let!(:carnivore_dino_1) { create(:dinosaur, species: carnivore_species_1) }
-      let!(:carnivore_dino_2) { create(:dinosaur, species: carnivore_species_2) }
-      let!(:carnivore_dino_3) { create(:dinosaur, species: carnivore_species_2) } # so that there are are 2 dinosaurs of this same carnivore species
+      let!(:herbivore_dino1) { create(:dinosaur, species: herbivore_species1) }
+      let!(:herbivore_dino2) { create(:dinosaur, species: herbivore_species2) }
+      let!(:carnivore_dino1) { create(:dinosaur, species: carnivore_species1) }
+      let!(:carnivore_dino2) { create(:dinosaur, species: carnivore_species2) }
+      let!(:carnivore_dino3) { create(:dinosaur, species: carnivore_species2) } # so that there are are 2 dinosaurs of this same carnivore species
 
       context 'when not requesting a filter by species' do
         it 'returns a list of all dinosaurs' do
@@ -31,15 +31,15 @@ RSpec.describe 'dinosaurs#index' do
       context 'when requesting a filter by species' do
         context 'when the species exists' do
           it 'returns only dinosaurs of that species' do
-            get dinosaurs_path(species_id: carnivore_species_2.id)
+            get dinosaurs_path(species_id: carnivore_species2.id)
 
             expect(response).to have_http_status(:success)
             parsed_response = JSON.parse(response.body)
 
             expect(parsed_response.size).to eq(2)
-            carnivore_species_2_dinos = Dinosaur.where(id: [carnivore_dino_2.id, carnivore_dino_3.id]).joins(:species)
+            carnivore_species2_dinos = Dinosaur.where(id: [carnivore_dino2.id, carnivore_dino3.id]).joins(:species)
 
-            expect(parsed_response.pluck('id', 'name', 'species_id', 'species_name')).to match_array(carnivore_species_2_dinos.pluck(:id, :name, :species_id, 'species.title'))
+            expect(parsed_response.pluck('id', 'name', 'species_id', 'species_name')).to match_array(carnivore_species2_dinos.pluck(:id, :name, :species_id, 'species.title'))
           end
         end
 

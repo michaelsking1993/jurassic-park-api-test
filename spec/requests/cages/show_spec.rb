@@ -4,8 +4,8 @@ RSpec.describe 'cages#show' do
   describe 'GET /cages/:id' do
     context 'when the cage exists' do
       let(:cage) { create(:cage, max_capacity: 3) }
-      let!(:dinosaur_1) { create(:dinosaur, cage: cage) }
-      let!(:dinosaur_2) { create(:dinosaur, species: dinosaur_1.species, cage: cage ) }
+      let!(:dinosaur1) { create(:dinosaur, cage: cage) }
+      let!(:dinosaur2) { create(:dinosaur, species: dinosaur1.species, cage: cage) }
 
       it 'returns a specific cage, including how many dinosaurs it contains' do
         get cage_path(cage.id)

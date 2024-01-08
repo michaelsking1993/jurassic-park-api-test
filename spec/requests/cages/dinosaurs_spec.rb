@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe 'cages#dinosaurs' do
   describe 'GET /cages/:cage_id/dinosaurs' do
     let(:cage) { create(:cage) }
-    let(:species_1) { create(:species, dietary_type: DIETARY_TYPES[:herbivore]) }
-    let(:species_2) { create(:species, dietary_type: DIETARY_TYPES[:herbivore]) }
-    let!(:dinosaur_1) { create(:dinosaur, species: species_1, cage: cage) }
-    let!(:dinosaur_2) { create(:dinosaur, species: species_2, cage: cage) }
+    let(:species1) { create(:species, dietary_type: DIETARY_TYPES[:herbivore]) }
+    let(:species2) { create(:species, dietary_type: DIETARY_TYPES[:herbivore]) }
+    let!(:dinosaur1) { create(:dinosaur, species: species1, cage: cage) }
+    let!(:dinosaur2) { create(:dinosaur, species: species2, cage: cage) }
 
     context 'when the cage is found' do
       it 'returns the dinosaurs inside of it' do
@@ -15,7 +15,7 @@ RSpec.describe 'cages#dinosaurs' do
         expect(response).to have_http_status(:success)
 
         parsed_body = JSON.parse(response.body)
-        dinos = Dinosaur.where(id: [dinosaur_1.id, dinosaur_2.id]).joins(:species)
+        dinos = Dinosaur.where(id: [dinosaur1.id, dinosaur2.id]).joins(:species)
 
         expect(parsed_body.pluck('id', 'name', 'species_id', 'species_name')).to match_array(dinos.pluck(:id, :name, :species_id, 'species.title'))
       end

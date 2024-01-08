@@ -26,7 +26,7 @@ RSpec.describe 'dinosaurs#update' do
 
     context 'with invalid parameters' do
       it 'returns an error' do
-        patch "/dinosaurs/#{dinosaur.id}", params: { dinosaur: { species_id: nil } }
+        patch dinosaur_path(dinosaur.id), params: { dinosaur: { species_id: nil } }
 
         expect(response).to have_http_status(:unprocessable_entity)
         expect(JSON.parse(response.body)['error']).to include('Species must exist')

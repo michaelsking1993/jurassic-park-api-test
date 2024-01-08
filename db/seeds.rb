@@ -5,7 +5,7 @@ if Species.count >= 20 && Dinosaur.count >= 200
   return
 end
 
-  # Create the dinosaur species, 10 carnivore species and 10 herbivore species.
+# Create the dinosaur species, 10 carnivore species and 10 herbivore species.
 carnivore_dinosaur_species = %w[Tyrannosaurus Velociraptor Spinosaurus Megalosaurus Allosaurus Carnotaurus Giganotosaurus Dilophosaurus Baryonyx Utahraptor]
 herbivore_dinosaur_species = %w[Brachiosaurus Stegosaurus Ankylosaurus Triceratops Apatosaurus Parasaurolophus Iguanodon Corythosaurus Edmontosaurus Protoceratops]
 

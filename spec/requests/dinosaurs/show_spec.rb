@@ -4,6 +4,7 @@ RSpec.describe 'dinosaurs#show' do
   describe 'GET /dinosaurs/:id' do
     context 'when the dinosaurs exists' do
       let(:dinosaur) { create(:dinosaur) }
+
       it 'returns a specific dinosaurs' do
         get dinosaur_path(dinosaur.id)
 

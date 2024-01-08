@@ -84,14 +84,14 @@ RSpec.describe Dinosaur do
 
         context 'when all the other dinosaurs have the same dietary_type as the one trying to get in' do
           it 'allows them in' do
-            herbivore_1 = create(:dinosaur, :herbivore)
-            herbivore_1_cage = herbivore_1.cage
+            herbivore1 = create(:dinosaur, :herbivore)
+            herbivore1_cage = herbivore1.cage
 
             another_herbivore = create(:dinosaur, :herbivore)
 
-            another_herbivore.update(cage: herbivore_1_cage)
+            another_herbivore.update(cage: herbivore1_cage)
             another_herbivore.reload
-            expect(another_herbivore.cage).to eq(herbivore_1_cage)
+            expect(another_herbivore.cage).to eq(herbivore1_cage)
           end
         end
       end
@@ -99,35 +99,35 @@ RSpec.describe Dinosaur do
       describe 'max_capacity' do
         context 'when a cage is already at max capacity' do
           it 'does not allow the dinosaur to be assigned the cage' do
-            cage_1 = create(:cage, max_capacity: 2)
-            dinosaur_1 = create(:dinosaur, cage: cage_1)
-            _dinosaur_2 = create(:dinosaur, species: dinosaur_1.species, cage: cage_1)
+            cage1 = create(:cage, max_capacity: 2)
+            dinosaur1 = create(:dinosaur, cage: cage1)
+            _dinosaur2 = create(:dinosaur, species: dinosaur1.species, cage: cage1)
 
             # create a different caged dinosaur, then attempt move them into cage 1
-            dinosaur_3 = create(:dinosaur, species: dinosaur_1.species)
-            cage_1.reload # this reload is necessary for the validation to act correctly.
-            dinosaur_3.update(cage: cage_1)
+            dinosaur3 = create(:dinosaur, species: dinosaur1.species)
+            cage1.reload # this reload is necessary for the validation to act correctly.
+            dinosaur3.update(cage: cage1)
 
-            expect(dinosaur_3.errors.full_messages).to include('Cannot move a dinosaur into a cage that is already at max capacity!')
-            dinosaur_3.reload
-            expect(dinosaur_3.cage).not_to eq(cage_1) # i.e. the change should NOT have persisted
+            expect(dinosaur3.errors.full_messages).to include('Cannot move a dinosaur into a cage that is already at max capacity!')
+            dinosaur3.reload
+            expect(dinosaur3.cage).not_to eq(cage1) # i.e. the change should NOT have persisted
           end
         end
 
         context 'when a cage has room (and does not violate any other validation)' do
           it 'allows the dinosaur to be assigned to the cage' do
-            cage_1 = create(:cage, max_capacity: 3)
-            dinosaur_1 = create(:dinosaur, cage: cage_1)
-            _dinosaur_2 = create(:dinosaur, species: dinosaur_1.species, cage: cage_1)
+            cage1 = create(:cage, max_capacity: 3)
+            dinosaur1 = create(:dinosaur, cage: cage1)
+            _dinosaur2 = create(:dinosaur, species: dinosaur1.species, cage: cage1)
 
             # create a different caged dinosaur, then move them into cage 1
-            dinosaur_3 = create(:dinosaur, species: dinosaur_1.species)
-            cage_1.reload # this reload is necessary for the validation to act correctly.
+            dinosaur3 = create(:dinosaur, species: dinosaur1.species)
+            cage1.reload # this reload is necessary for the validation to act correctly.
 
-            dinosaur_3.update(cage: cage_1)
+            dinosaur3.update(cage: cage1)
 
-            dinosaur_3.reload
-            expect(dinosaur_3.cage).to eq(cage_1) # i.e. the change should have persisted
+            dinosaur3.reload
+            expect(dinosaur3.cage).to eq(cage1) # i.e. the change should have persisted
           end
         end
       end
@@ -135,30 +135,30 @@ RSpec.describe Dinosaur do
       describe 'moving carnivores into a cage with each other' do
         context 'when 1 or more carnivores of a different species are already in the cage' do
           it 'does not let them in' do
-            carnivore_1, carnivore_2 = create_list(:dinosaur, 2, :carnivore)
-            cage_1 = carnivore_1.cage
+            carnivore1, carnivore2 = create_list(:dinosaur, 2, :carnivore)
+            cage1 = carnivore1.cage
 
             # now, attempt to put them in the same cage
-            carnivore_2.update(cage: cage_1)
+            carnivore2.update(cage: cage1)
 
-            expect(carnivore_2.errors.full_messages).to include('Cannot move a carnivore into a cage with a carnivore of a different species!')
-            carnivore_2.reload
-            expect(carnivore_2.cage).not_to eq(cage_1) # i.e. the update should not have persisted.
+            expect(carnivore2.errors.full_messages).to include('Cannot move a carnivore into a cage with a carnivore of a different species!')
+            carnivore2.reload
+            expect(carnivore2.cage).not_to eq(cage1) # i.e. the update should not have persisted.
           end
         end
 
         context 'when carnivore(s) of only the same species are in the cage' do
           it 'lets them in' do
             carnivore_species = create(:species, :carnivore)
-            carnivore_1, carnivore_2 = create_list(:dinosaur, 2, species: carnivore_species)
+            carnivore1, carnivore2 = create_list(:dinosaur, 2, species: carnivore_species)
 
-            cage_1 = carnivore_1.cage
+            cage1 = carnivore1.cage
 
             # now, attempt to put them in the same cage
-            carnivore_2.update(cage: cage_1)
+            carnivore2.update(cage: cage1)
 
-            carnivore_2.reload
-            expect(carnivore_2.cage).to eq(cage_1) # i.e. the change should have persisted.
+            carnivore2.reload
+            expect(carnivore2.cage).to eq(cage1) # i.e. the change should have persisted.
           end
         end
       end

@@ -4,10 +4,8 @@ class DinosaursController < ApplicationController
 
     if params[:species_id].present?
       # species filter
-      species = Species.find_by_id(params[:species_id])
-      if species.present?
-        @dinosaurs = @dinosaurs.where(species_id: species.id)
-        render json: @dinosaurs
+      if (species = Species.find_by_id(params[:species_id])).present?
+        render json: @dinosaurs.where(species_id: species.id)
       else
         render json: { error: 'Species not found' }, status: :not_found
       end
@@ -19,6 +17,7 @@ class DinosaursController < ApplicationController
 
   def show
     @dinosaur = Dinosaur.with_species_name.find_by_id(params[:id])
+
     if @dinosaur.present?
       render json: @dinosaur
     else
@@ -38,6 +37,7 @@ class DinosaursController < ApplicationController
 
   def update
     @dinosaur = Dinosaur.find_by_id(params[:id])
+
     if @dinosaur&.update(dinosaur_params)
       render json: @dinosaur
     elsif @dinosaur.blank?

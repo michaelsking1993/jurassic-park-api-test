@@ -10,7 +10,6 @@ RSpec.describe Cage do
     end
   end
 
-
   describe 'validations' do
     context 'when adding a cage' do
       it 'must have a power_status' do
