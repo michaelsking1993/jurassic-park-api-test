@@ -2,6 +2,7 @@ class Cage < ApplicationRecord
   has_many :dinosaurs
 
   validates :power_status, presence: true
+  validates :max_capacity, numericality: { only_integer: true }
 
   # make sure the cage is empty before powering down
   validate :cage_is_empty_if_powering_down

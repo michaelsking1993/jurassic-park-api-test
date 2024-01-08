@@ -1,7 +1,14 @@
 FactoryBot.define do
   factory :cage do
     max_capacity { rand(1..10) }
-    power_status { POWER_STATUSES[:active] }
+
+    trait :active do
+      power_status { POWER_STATUSES[:active] }
+    end
+
+    trait :down do
+      power_status { POWER_STATUSES[:down] }
+    end
   end
 
   factory :dinosaur do
