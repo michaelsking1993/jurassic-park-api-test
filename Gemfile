@@ -29,6 +29,8 @@ gem 'tzinfo-data', platforms: %i[ windows jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', require: false
 
+gem 'faker' # include this so that we can use it in our seeds script, both in development and in production (since it's just a demonstration)
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
@@ -38,7 +40,6 @@ gem 'bootsnap', require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[ mri windows ]
-  gem 'faker' # include this in the group with development so that we can use it for our seeds script.
 end
 
 group :test do

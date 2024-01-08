@@ -20,7 +20,7 @@ class SpeciesController < ApplicationController
     if @species.save
       render json: @species, status: :created
     else
-      render json: { error: @species.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @species.errors.full_messages.join(' ') }, status: :unprocessable_entity
     end
   end
 
@@ -32,13 +32,15 @@ class SpeciesController < ApplicationController
     elsif @species.blank?
       render json: { error: 'Species not found' }, status: :not_found
     else
-      render json: { error: @species.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @species.errors.full_messages.join(' ') }, status: :unprocessable_entity
     end
   end
 
   private
 
   def species_params
+    params[:species][:dietary_type]&.strip!
+    params[:species][:dietary_type]&.downcase!
     params.require(:species).permit(:title, :dietary_type)
   end
 end

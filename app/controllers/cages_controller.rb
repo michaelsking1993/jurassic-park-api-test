@@ -41,7 +41,7 @@ class CagesController < ApplicationController
     if @cage.save
       render json: @cage, status: :created
     else
-      render json: { error: @cage.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @cage.errors.full_messages.join(' ') }, status: :unprocessable_entity
     end
   end
 
@@ -53,13 +53,15 @@ class CagesController < ApplicationController
     elsif @cage.blank?
       render json: { error: 'Cage not found' }, status: :not_found
     else
-      render json: { error: @cage.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @cage.errors.full_messages.join(' ') }, status: :unprocessable_entity
     end
   end
 
   private
 
   def cage_params
+    params[:cage][:power_status]&.strip!
+    params[:cage][:power_status]&.downcase!
     params.require(:cage).permit(:max_capacity, :power_status)
   end
 end
