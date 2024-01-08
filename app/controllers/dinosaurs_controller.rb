@@ -38,10 +38,12 @@ class DinosaursController < ApplicationController
   def update
     @dinosaur = Dinosaur.find_by_id(params[:id])
 
-    if @dinosaur&.update(dinosaur_params)
-      render json: @dinosaur
-    elsif @dinosaur.blank?
+    if @dinosaur.blank?
       render json: { error: 'Dinosaur not found' }, status: :not_found
+    elsif dinosaur_params[:cage_id].present? && Cage.find_by_id(dinosaur_params[:cage_id]).blank?
+      render json: { error: 'Cage not found' }, status: :not_found
+    elsif @dinosaur&.update(dinosaur_params)
+      render json: @dinosaur
     else
       render json: { error: @dinosaur.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end

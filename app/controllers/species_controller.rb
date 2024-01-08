@@ -15,30 +15,30 @@ class SpeciesController < ApplicationController
   end
 
   def create
-    @dinosaur = Dinosaur.new(dinosaur_params)
+    @species = Species.new(species_params)
 
-    if @dinosaur.save
-      render json: @dinosaur, status: :created
+    if @species.save
+      render json: @species, status: :created
     else
-      render json: { error: @dinosaur.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { error: @species.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
   end
 
-  # def update
-  #   @dinosaur = Dinosaur.find_by_id(params[:id])
-  #
-  #   if @dinosaur&.update(dinosaur_params)
-  #     render json: @dinosaur
-  #   elsif @dinosaur.blank?
-  #     render json: { error: 'Dinosaur not found' }, status: :not_found
-  #   else
-  #     render json: { error: @dinosaur.errors.full_messages.join(', ') }, status: :unprocessable_entity
-  #   end
-  # end
+  def update
+    @species = Species.find_by_id(params[:id])
+
+    if @species&.update(species_params)
+      render json: @species
+    elsif @species.blank?
+      render json: { error: 'Species not found' }, status: :not_found
+    else
+      render json: { error: @species.errors.full_messages.join(', ') }, status: :unprocessable_entity
+    end
+  end
 
   private
 
   def species_params
-    params.require(:dinosaur).permit(:title, :dietary_type)
+    params.require(:species).permit(:title, :dietary_type)
   end
 end
