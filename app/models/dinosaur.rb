@@ -31,20 +31,17 @@ class Dinosaur < ApplicationRecord
 
   # cannot add dinosaurs to a cage with dinosaurs of a different dietary type (ex. no herbivores in the same cage with carnivores)
   def cage_has_only_my_diet
-    diets_in_cage = cage.dinosaurs.joins(:species).pluck('species.dietary_type')
-    my_diet = species.dietary_type
-
-    unless diets_in_cage.all? { |diet| diet == my_diet }
+    # if the cage has any dinosaurs with a dietary type that is NOT my dietary type...
+    if cage.dinosaurs.joins(:species).where('species.dietary_type != ?', Species.dietary_types[species.dietary_type.to_sym]).any?
       errors.add(:base, 'Cannot move a dinosaur into a cage with dinosaurs of a different diet type')
     end
   end
 
   # cannot add carnivores to a cage with carnivores of a different species
   def cage_has_carnivores_of_only_same_species
-    if (my_species = species).dietary_type == DIETARY_TYPES[:carnivore]
-      species_ids_in_cage = cage.dinosaurs.joins(:species).pluck('species.id')
-
-      unless species_ids_in_cage.all? { |species_id| species_id == my_species.id }
+    if species.dietary_type == DIETARY_TYPES[:carnivore]
+      # if the cage has any CARNIVORES that are NOT my species...
+      if cage.dinosaurs.joins(:species).where('species.dietary_type = ?', Species.dietary_types[:carnivore]).where.not(species_id: species.id).any?
         errors.add(:base, 'Cannot move a carnivore into a cage with a carnivore of a different species')
       end
     end
