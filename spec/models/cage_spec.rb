@@ -31,7 +31,7 @@ RSpec.describe Cage do
             some_cage.dinosaurs << some_dinosaur
             some_cage.update(power_status: POWER_STATUSES[:down])
 
-            expect(some_cage.errors.full_messages).to include('Cannot power down a cage when dinosaurs are inside!')
+            expect(some_cage.errors.full_messages).to include('Cannot power down a cage when dinosaurs are inside')
             some_cage.reload
             expect(some_cage.power_status).to eq(POWER_STATUSES[:active]) # i.e. cage should still be active, the change should not have persisted.
           end

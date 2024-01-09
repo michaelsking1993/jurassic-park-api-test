@@ -47,7 +47,7 @@ RSpec.describe Dinosaur do
 
             some_dinosaur.update(cage_id: inactive_cage.id)
 
-            expect(some_dinosaur.errors.full_messages).to include('Cannot move a dinosaur into a powered down cage!')
+            expect(some_dinosaur.errors.full_messages).to include('Cannot move a dinosaur into a powered down cage')
             some_dinosaur.reload
             expect(some_dinosaur.cage_id).not_to eq(inactive_cage.id)
           end
@@ -75,7 +75,7 @@ RSpec.describe Dinosaur do
             carnivore = create(:dinosaur, :carnivore)
 
             carnivore.update(cage: herbivore_cage)
-            expect(carnivore.errors.full_messages).to include('Cannot move a dinosaur into a cage with dinosaurs of a different diet type!')
+            expect(carnivore.errors.full_messages).to include('Cannot move a dinosaur into a cage with dinosaurs of a different diet type')
 
             carnivore.reload
             expect(carnivore.cage_id).not_to eq(herbivore_cage.id)
@@ -108,7 +108,7 @@ RSpec.describe Dinosaur do
             cage1.reload # this reload is necessary for the validation to act correctly.
             dinosaur3.update(cage: cage1)
 
-            expect(dinosaur3.errors.full_messages).to include('Cannot move a dinosaur into a cage that is already at max capacity!')
+            expect(dinosaur3.errors.full_messages).to include('Cannot move a dinosaur into a cage that is already at max capacity')
             dinosaur3.reload
             expect(dinosaur3.cage).not_to eq(cage1) # i.e. the change should NOT have persisted
           end
@@ -141,7 +141,7 @@ RSpec.describe Dinosaur do
             # now, attempt to put them in the same cage
             carnivore2.update(cage: cage1)
 
-            expect(carnivore2.errors.full_messages).to include('Cannot move a carnivore into a cage with a carnivore of a different species!')
+            expect(carnivore2.errors.full_messages).to include('Cannot move a carnivore into a cage with a carnivore of a different species')
             carnivore2.reload
             expect(carnivore2.cage).not_to eq(cage1) # i.e. the update should not have persisted.
           end

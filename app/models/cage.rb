@@ -20,7 +20,7 @@ class Cage < ApplicationRecord
     is_powering_down = will_save_change_to_power_status? && down?
 
     if is_powering_down && dinosaurs.any?
-      errors.add(:base, 'Cannot power down a cage when dinosaurs are inside!')
+      errors.add(:base, 'Cannot power down a cage when dinosaurs are inside')
     end
   end
 end

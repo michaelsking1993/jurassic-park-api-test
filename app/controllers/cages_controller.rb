@@ -2,10 +2,10 @@ class CagesController < ApplicationController
   def index
     @cages = Cage.with_dinosaurs_contained
 
-    if (power_status = params[:power_status]&.downcase).present?
+    if (power_status = params[:power_status]&.downcase&.strip).present?
       # power status filter
       if power_status.in?(POWER_STATUSES.values)
-        render json: @cages.where(power_status: params[:power_status])
+        render json: @cages.where(power_status: power_status)
       else
         render json: { error: 'Power status not found' }, status: :not_found
       end
@@ -41,7 +41,7 @@ class CagesController < ApplicationController
     if @cage.save
       render json: @cage, status: :created
     else
-      render json: { error: @cage.errors.full_messages.join(' ') }, status: :unprocessable_entity
+      render json: { error: @cage.errors.full_messages.join('; ') }, status: :unprocessable_entity
     end
   end
 
@@ -53,7 +53,7 @@ class CagesController < ApplicationController
     elsif @cage.blank?
       render json: { error: 'Cage not found' }, status: :not_found
     else
-      render json: { error: @cage.errors.full_messages.join(' ') }, status: :unprocessable_entity
+      render json: { error: @cage.errors.full_messages.join('; ') }, status: :unprocessable_entity
     end
   end
 

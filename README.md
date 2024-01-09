@@ -89,13 +89,13 @@ I setup a group of endpoints that looked like this:
     - Creates a dinosaur with the passed parameters.
     - The request body must be formatted as follows: `{ dinosaur: { species_id: INT, cage_id: INT, name: STRING }`
     - Returns the dinosaur object that was created, or a helpful error message.
-    - Status code will be a 201 created, or a 422 Unprocessable Entity if parameters are invalid, or 404 not found if there is no cage or species found with the passed cage_id / species_id.
+    - Status code will be a 201 created, or a 422 Unprocessable Entity if parameters are invalid.
 
 - `PATCH /dinosaurs/:id`
     - Updates a dinosaur with the passed parameters.
     - The request body must be formatted as follows (note that only 1 or more of the inner keys are required):  `{ dinosaur: { species_id: INT, cage_id: INT, name: STRING }`
     - Returns the dinosaur object that was updated.
-    - Status code will be a 200, or a 404 Not Found if no dinosaur can be found with the given ID.
+    - Status code will be a 200, a 404 Not Found if no dinosaur can be found with the given ID, or a 422 Unprocessable Entity if any of the parameters are invalid.
 
 - `GET /species`
     - Returns a list of species in the database, **including how many dinosaurs in the park pertain to this species**.
@@ -104,19 +104,19 @@ I setup a group of endpoints that looked like this:
 - `GET /species/:id_or_title`
   - Returns a species with the given ID, including how many dinosaurs in the park pertain to this species.
   - **can pass EITHER an ID, OR a name/title of the species**.
-  - Status code will be a 200, or a 404 not found if no species can be found with the given ID or title.
+  - Status code will be a 200, or a 404 Not Found if no species can be found with the given ID or title.
 
 - `POST /species`
   - Creates a species with the passed parameters
   - The request body must be formatted as follow: `{ species: { title: STRING, dietary_type: "herbivore"/"carnivore" } }`
   - Returns the species object created, or a a helpful error message.
-  - Status code will be a 201 created, or a 422 Unprocessable Entity
+  - Status code will be a 201 created, or a 422 Unprocessable Entity if any of the parameters are invalid.
 
 - `PATCH /species/:id`
   - Updates a species with the passed parameters.
   - The request body must be formatted as follows (note that only 1 of the following keys need to be present to update the species): `{ species: { title: STRING, dietary_type: "herbivore"/"carnivore" } }`
   - Returns the species object that was updated.
-  - Status code will be a 200, or a 404
+  - Status code will be a 200, or a 404 Not Found if no species can be found with the given ID.
 
 <a name="database-structure"></a>
 ## Database Structure

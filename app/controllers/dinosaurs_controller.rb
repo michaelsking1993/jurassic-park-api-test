@@ -28,14 +28,10 @@ class DinosaursController < ApplicationController
   def create
     @dinosaur = Dinosaur.new(dinosaur_params)
 
-    if Cage.find_by_id(dinosaur_params[:cage_id]).blank?
-      render json: { error: 'Cage not found' }, status: :not_found
-    elsif Species.find_by_id(dinosaur_params[:species_id]).blank?
-      render json: { error: 'Species not found' }, status: :not_found
-    elsif @dinosaur.save
+    if @dinosaur.save
       render json: @dinosaur, status: :created
     else
-      render json: { error: @dinosaur.errors.full_messages.join(' ') }, status: :unprocessable_entity
+      render json: { error: @dinosaur.errors.full_messages.join('; ') }, status: :unprocessable_entity
     end
   end
 
@@ -44,12 +40,10 @@ class DinosaursController < ApplicationController
 
     if @dinosaur.blank?
       render json: { error: 'Dinosaur not found' }, status: :not_found
-    elsif dinosaur_params[:cage_id].present? && Cage.find_by_id(dinosaur_params[:cage_id]).blank?
-      render json: { error: 'Cage not found' }, status: :not_found
     elsif @dinosaur&.update(dinosaur_params)
       render json: @dinosaur
     else
-      render json: { error: @dinosaur.errors.full_messages.join(' ') }, status: :unprocessable_entity
+      render json: { error: @dinosaur.errors.full_messages.join('; ') }, status: :unprocessable_entity
     end
   end
 
