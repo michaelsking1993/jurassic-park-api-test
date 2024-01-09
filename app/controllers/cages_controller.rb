@@ -35,6 +35,16 @@ class CagesController < ApplicationController
     end
   end
 
+  def species
+    @cage = Cage.find_by_id(params[:cage_id])
+
+    if @cage.blank?
+      render json: { error: 'Cage not found' }, status: :not_found
+    else
+      render json: @cage.dinosaurs.includes(:species).map(&:species).uniq
+    end
+  end
+
   def create
     @cage = Cage.new(cage_params)
 

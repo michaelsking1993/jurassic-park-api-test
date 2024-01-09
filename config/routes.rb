@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :cages, except: %i[edit destroy] do
     # resources :dinosaurs, only: [:index]
     get 'dinosaurs', to: 'cages#dinosaurs', as: :dinosaurs # a list of dinosaurs inside of a given cage.
+    get 'species', to: 'cages#species', as: :species # a list of species inside a cage (for internal testing)
   end
 
   resources :species, except: %i[edit destroy] # Not part of project reqs, just for easier querying in postman and for playing around with the app
